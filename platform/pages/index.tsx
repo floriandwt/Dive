@@ -1,131 +1,257 @@
-import clsx from "clsx";
-import { GetServerSideProps } from "next";
-import { ComponentProps, ReactNode } from "react";
-import { DASHBOARD_URL } from "../constants";
-import { SignInIcon } from "../icons";
-import { MarketingLayout } from "../layouts/Marketing";
-import { signIn } from "next-auth/react";
-import * as Server from "../lib/server";
-import { Button, LinkButton } from "../primitives/Button";
-import { Container } from "../primitives/Container";
+import React, { useMemo } from "react";
+import {
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  Bar,
+  Legend,
+  PieChart,
+  Pie,
+  BarChart,
+} from "recharts";
+import { DataKey } from "recharts/types/util/types";
+import {
+  dataRevenue,
+  dataUsers,
+  dataPlatforms,
+  dataActivation,
+} from "../src/data";
+import { useMyPresence, useOthersMapped } from "../src/liveblocks.config";
 import styles from "./index.module.css";
+import Header from "../src/components/Header";
+import Card from "../src/components/Card";
 
-interface FeatureProps extends Omit<ComponentProps<"div">, "title"> {
-  description: ReactNode;
-  title: ReactNode;
-}
 
-function Feature({ title, description, className, ...props }: FeatureProps) {
+export default function Example() {
+  const [myPresence, updateMyPresence] = useMyPresence();
+  const others = useOthersMapped((user) => user.presence.selectedDataset);
+
+  const handleLegendPointerEnter = (
+    e: {
+      dataKey: DataKey<string>;
+    },
+    cardId: string
+  ) => {
+    const { dataKey } = e;
+
+    const selectedDataset = {
+      cardId: cardId,
+      dataKey: dataKey.toString(), // convert number to string
+    };
+
+    updateMyPresence({
+      selectedDataset: selectedDataset,
+    });
+  };
+
+  const handleLegendPointerLeave = () => {
+    updateMyPresence({
+      selectedDataset: null,
+    });
+  };
+
+  const isDatasetSelected = (cardId: string, dataKey: DataKey<string>) => {
+    if (
+      myPresence.selectedDataset?.cardId === cardId &&
+      myPresence.selectedDataset?.dataKey === dataKey
+    ) {
+      return true;
+    }
+
+    for (const [, selectedDataset] of others) {
+      if (
+        selectedDataset?.cardId === cardId &&
+        selectedDataset?.dataKey === dataKey
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   return (
-    <div className={clsx(className, styles.featuresFeature)} {...props}>
-      <h4 className={styles.featuresFeatureTitle}>{title}</h4>
-      <p className={styles.featuresFeatureDescription}>{description}</p>
+    <div className={styles.container}>
+      <Header />
+      <div className={styles.container_charts}>
+        <Card id="revenue">
+          <h2 className={styles.card_heading}>
+            $12,900
+            <span>Revenue</span>
+          </h2>
+
+          <div className={styles.card_chart_area}>
+            <ResponsiveContainer width={"100%"} height={220}>
+              <LineChart
+                data={dataRevenue}
+                margin={{ top: 8, right: 8, left: 8, bottom: 8 }}
+              >
+                <XAxis dataKey="name" hide />
+                <YAxis type="number" domain={["dataMin", "dataMax"]} hide />
+                <Line
+                  type="monotone"
+                  dataKey="current"
+                  stroke={
+                    isDatasetSelected("revenue", "previous")
+                      ? "#e1e5e9"
+                      : "#31f2cc"
+                  }
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="previous"
+                  stroke={
+                    isDatasetSelected("revenue", "current")
+                      ? "#e1e5e9"
+                      : "#2E75FF"
+                  }
+                  strokeWidth={2}
+                />
+                <Legend
+                  align="left"
+                  verticalAlign="top"
+                  onPointerEnter={(event) =>
+                    handleLegendPointerEnter(event, "revenue")
+                  }
+                  onPointerLeave={handleLegendPointerLeave}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+        <Card id="platforms">
+          <h2 className={styles.card_heading}>
+            Platforms
+            <span>Most used: Android</span>
+          </h2>
+
+          <div className={styles.card_chart_area}>
+            <ResponsiveContainer width={"100%"} height={220}>
+              <PieChart>
+                <Pie
+                  data={dataPlatforms}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  innerRadius={60}
+                  dataKey="value"
+                  label={(entry) => {
+                    return entry.name;
+                  }}
+                  labelLine={false}
+                  fill={"#2E75FF"}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+        <Card id="users">
+          <h2 className={styles.card_heading}>
+            455
+            <span>New users</span>
+          </h2>
+
+          <div className={styles.card_chart_area}>
+            <ResponsiveContainer width={"100%"} height={220}>
+              <LineChart
+                data={dataUsers}
+                margin={{ top: 8, right: 8, left: 8, bottom: 8 }}
+              >
+                <XAxis dataKey="name" hide />
+                <YAxis type="number" domain={["dataMin", "dataMax"]} hide />
+                <Line
+                  type="monotone"
+                  dataKey="current"
+                  stroke={
+                    isDatasetSelected("users", "previous")
+                      ? "#e1e5e9"
+                      : "#31f2cc"
+                  }
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="previous"
+                  stroke={
+                    isDatasetSelected("users", "current")
+                      ? "#e1e5e9"
+                      : "#2E75FF"
+                  }
+                  strokeWidth={2}
+                />
+                <Legend
+                  align="left"
+                  verticalAlign="top"
+                  onPointerEnter={(event) =>
+                    handleLegendPointerEnter(event, "users")
+                  }
+                  onPointerLeave={handleLegendPointerLeave}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card id="activation">
+          <h2 className={styles.card_heading}>
+            Activation
+            <span>Users</span>
+          </h2>
+
+          <div className={styles.card_chart_area}>
+            <ResponsiveContainer width={"100%"} height={220}>
+              <BarChart
+                data={dataActivation}
+                margin={{ top: 8, right: 8, left: 8, bottom: 8 }}
+              >
+                <Legend
+                  align="left"
+                  verticalAlign="top"
+                  onPointerEnter={(event) =>
+                    handleLegendPointerEnter(event, "activation")
+                  }
+                  onPointerLeave={handleLegendPointerLeave}
+                />
+                <Bar
+                  dataKey="current"
+                  fill={
+                    isDatasetSelected("activation", "previous")
+                      ? "#e1e5e9"
+                      : "#31f2cc"
+                  }
+                />
+                <Bar
+                  dataKey="previous"
+                  fill={
+                    isDatasetSelected("activation", "current")
+                      ? "#e1e5e9"
+                      : "#2E75FF"
+                  }
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }
 
-export default function Index() {
-  return (
-    <MarketingLayout>
-      <Container className={styles.section}>
-        <div className={styles.heroInfo}>
-          <h1 className={styles.heroTitle}>
-            Kickstart your collaborative&nbsp;app
-          </h1>
-          <p className={styles.heroLead}>
-            Use the Liveblocks Starter Kit to build your document-based
-            collaborative app in&nbsp;minutes.
-          </p>
-        </div>
-        <div className={styles.heroActions}>
-          <Button icon={<SignInIcon />} onClick={() => signIn()}>
-            Sign in
-          </Button>
-          <LinkButton
-            href="https://liveblocks.io/docs/guides/nextjs-starter-kit"
-            target="_blank"
-            variant="secondary"
-          >
-            Learn more
-          </LinkButton>
-        </div>
-      </Container>
-      <Container className={styles.section}>
-        <h2 className={styles.sectionTitle}>Features</h2>
-        <div className={styles.featuresGrid}>
-          <Feature
-            description={
-              <>
-                A collaborative whiteboard app with included share menu,
-                documents listing, users, groups, permissions, and more.
-              </>
-            }
-            title="Liveblocks"
-          />
-          <Feature
-            description={
-              <>
-                Best practices followed, using a mixture of SSR and custom API
-                endpoints. Modify documents from both client and server.
-              </>
-            }
-            title="Next.js"
-          />
-          <Feature
-            description={
-              <>
-                Adjust our reusable interface & design system to fit your needs.
-              </>
-            }
-            title="User Interface"
-          />
-          <Feature
-            description={
-              <>
-                All custom client and server functions are fully typed, and easy
-                to update.
-              </>
-            }
-            title="TypeScript"
-          />
-          <Feature
-            description={
-              <>
-                Complete authentication, compatible with any NextAuth provider,
-                including GitHub, Google, Auth0, and many more.
-              </>
-            }
-            title="NextAuth.js"
-          />
-          <Feature
-            description={
-              <>
-                See data update live using the SWR (state-while-revalidate)
-                library.
-              </>
-            }
-            title="SWR"
-          />
-        </div>
-      </Container>
-    </MarketingLayout>
-  );
-}
+export async function getStaticProps() {
+  const API_KEY = process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY;
+  const API_KEY_WARNING = process.env.CODESANDBOX_SSE
+    ? `Add your public key from https://liveblocks.io/dashboard/apikeys as the \`NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY\` secret in CodeSandbox.\n` +
+      `Learn more: https://github.com/liveblocks/liveblocks/tree/main/examples/nextjs-live-cursors-chat#codesandbox.`
+    : `Create an \`.env.local\` file and add your public key from https://liveblocks.io/dashboard/apikeys as the \`NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY\` environment variable.\n` +
+      `Learn more: https://github.com/liveblocks/liveblocks/tree/main/examples/nextjs-live-cursors-chat#getting-started.`;
 
-// If logged in, redirect to dashboard
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const session = await Server.getServerSession(req, res);
-
-  if (session) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: DASHBOARD_URL,
-      },
-    };
+  if (!API_KEY) {
+    console.warn(API_KEY_WARNING);
   }
 
-  return {
-    props: {},
-  };
-};
+  return { props: {} };
+}
+

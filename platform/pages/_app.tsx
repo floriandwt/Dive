@@ -1,27 +1,56 @@
-import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
-import { AppProps } from "next/app";
+import type { AppProps } from "next/app";
 import Head from "next/head";
-import { Badge } from "../components/Badge";
-import "../styles/globals.css";
+import { RoomProvider } from "../src/liveblocks.config";
+import { useRouter } from "next/router";
+import React, { useMemo } from "react";
+import "./globals.css";
+import Example from "./index";
 
-export default function App({
-  Component,
-  pageProps,
-}: AppProps<{ session: Session }>) {
+function App({ Component, pageProps }: AppProps) {
+  const roomId = useOverrideRoomId("nextjs-dashboard");
   return (
-    <>
+    <RoomProvider
+      id={roomId}
+      initialPresence={{
+        selectedDataset: null,
+        cursor: null,
+        cardId: null,
+      }}
+    >
+      <Example />
       <Head>
-        <title>Starter Kit</title>
-        <link href="/favicon.svg" rel="icon" type="image/svg" />
+        <title>Liveblocks</title>
+        <meta name="robots" content="noindex" />
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+        <link
+          href="https://liveblocks.io/favicon-32x32.png"
+          rel="icon"
+          sizes="32x32"
+          type="image/png"
+        />
+        <link
+          href="https://liveblocks.io/favicon-16x16.png"
+          rel="icon"
+          sizes="16x16"
+          type="image/png"
+        />
       </Head>
-      <TooltipProvider>
-        <SessionProvider session={pageProps.session}>
-          <Component {...pageProps} />
-          <Badge />
-        </SessionProvider>
-      </TooltipProvider>
-    </>
+      <Component {...pageProps} />
+    </RoomProvider>
   );
+}
+
+export default App;
+
+/**
+ * This function is used when deploying an example on liveblocks.io.
+ * You can ignore it completely if you run the example locally.
+ */
+function useOverrideRoomId(roomId: string) {
+  const { query } = useRouter();
+  const overrideRoomId = useMemo(() => {
+    return query?.roomId ? `${roomId}-${query.roomId}` : roomId;
+  }, [query, roomId]);
+
+  return overrideRoomId;
 }

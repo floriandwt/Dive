@@ -1,44 +1,28 @@
 {
-  "description": "This repository contains a collaborative starter kit using Liveblocks and Next.js.",
+  "name": "@liveblocks/nextjs-dashboard",
+  "description": "This example shows how to build collaborative data visualization with Liveblocks, React and Recharts.",
   "license": "Apache-2.0",
   "private": true,
+  "dependencies": {
+    "@liveblocks/client": "^1.0.11",
+    "@liveblocks/react": "^1.0.11",
+    "next": "^12.1.6",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-scripts": "^5.0.1",
+    "recharts": "^2.5.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint --fix",
-    "typecheck": "tsc --project tsconfig.json --noEmit"
-  },
-  "dependencies": {
-    "@liveblocks/client": "^1.0.11",
-    "@liveblocks/node": "^1.0.11",
-    "@liveblocks/react": "^1.0.11",
-    "@radix-ui/react-dialog": "^1.0.2",
-    "@radix-ui/react-popover": "^1.0.2",
-    "@radix-ui/react-select": "^1.1.1",
-    "@radix-ui/react-tabs": "^1.0.1",
-    "@radix-ui/react-tooltip": "^1.0.2",
-    "base-64": "^1.0.0",
-    "clsx": "^1.2.1",
-    "date-fns": "^2.29.3",
-    "nanoid": "^4.0.0",
-    "next": "^13.0.3",
-    "next-auth": "^4.20.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "swr": "^1.3.0"
+    "start": "next start"
   },
   "devDependencies": {
-    "@types/base-64": "^1.0.0",
-    "@types/node": "^18.11.9",
-    "@types/react": "18.0.25",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
-    "eslint": "^8.27.0",
-    "eslint-config-next": "^13.0.3",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1",
-    "typescript": "^4.8.4"
+    "@types/node": "^16.10.1",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "^18.0.6",
+    "@types/recharts": "^1.8.24",
+    "prettier": "^2.6.2",
+    "typescript": "^4.6.4"
   }
 }
