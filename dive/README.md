@@ -1,27 +1,36 @@
+This is a simple realtime chat example that demonstrates how to setup a Socket.io server in Next.js as an API route end-point.
 
+## Getting Started
 
-https://user-images.githubusercontent.com/33033422/216776250-04ef297b-f61a-42ec-a7b9-b08e46dddf8f.mp4
+1. Clone this repo and `cd` into it
 
-# [Next.js Starter Kit](https://liveblocks.io/starter-kit)
+2. Install dependencies:
 
-<p>
-  <a href="https://codesandbox.io/s/github/liveblocks/liveblocks/tree/main/starter-kits/nextjs-starter-kit">
-    <img src="https://img.shields.io/badge/open%20in%20codesandbox-message?style=flat&logo=codesandbox&color=333&logoColor=fff" alt="Open in CodeSandbox" />
-  </a>
-  <img src="https://img.shields.io/badge/react-message?style=flat&logo=react&color=0bd&logoColor=fff" alt="React" />
-  <img src="https://img.shields.io/badge/next.js-message?style=flat&logo=next.js&color=07f&logoColor=fff" alt="Next.js" />
-</p>
+```bash
+npm install
+# or
+yarn install
+```
 
-Kickstart start your collaborative Next.js app with this starter kit.
+3. Run the development server:
 
-## Features
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-- Documents dashboard with pagination, drafts, groups, auto-revalidation
-- Collaborative whiteboard app with a fully-featured share menu
-- Authentication compatible with GitHub, Google, Auth0, and more
-- Document permissions can be scoped to users, groups, and the public
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Get started
+## How it works
 
-[Read the guide](http://liveblocks.io/docs/guides/nextjs-starter-kit) to get
-started.
+Open multiple browser windows and start a chat to see it in action.
+
+## Caveats
+
+This example doesn't run in a serverless environment.
+A running server instance is still needed.
+
+## Check a DEMO
+
+Check the code and test this example in [Codesandbox](https://codesandbox.io/s/nextjs-socketio-chat-piffv)
