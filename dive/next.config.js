@@ -1,10 +1,6 @@
-module.exports = {
-  webpack: (config, { isServer }) => {
-    // Fixes packages that depend on fs/module module
-    if (!isServer) {
-      config.node = { fs: "empty", module: "empty" };
-    }
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+}
 
-    return config;
-  },
-};
+module.exports = nextConfig
