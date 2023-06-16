@@ -1,10 +1,11 @@
 import Navigation from "@/components/Navigation";
 import Sidebar from "@/components/Sidebar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import io from "socket.io-client";
 let socket;
 
 const Home = () => {
+  const [currentTab, setCurrentTab] = useState("Dashboard");
   // useEffect(() => socketInitializer(), []);
 
   const socketInitializer = async () => {
@@ -24,7 +25,7 @@ const Home = () => {
     <main className="h-screen w-screen flex flex-col items-start justify-start">
       <Navigation />
       <div className="w-full h-full flex">
-        <Sidebar />
+        <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
         <div className="h-full w-full bg-zinc-50"></div>
       </div>
     </main>
