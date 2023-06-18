@@ -28,9 +28,9 @@ const Home = () => {
         <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
         <div className="h-full w-full bg-zinc-50 p-8">
           {currentTab === "Dashboard" && (
-            <div className="grid grid-cols-3 gap-8 h-full">
-              <div className="col-span-2 bg-white border border-zinc-100 p-8 rounded-3xl">
-                <p className="text-zinc-400 text-lg font-medium">
+            <div className="grid grid-cols-3 gap-8 h-full grid-rows-3">
+              <div className="col-span-2 bg-white border border-zinc-100 p-8 rounded-3xl row-span-2 flex flex-col justify-between">
+                <p className="text-zinc-400">
                   Diving tours
                 </p>
                 <div className="w-full">
@@ -124,11 +124,11 @@ const Home = () => {
                 <div className="mb-6 h-[1px] bg-zinc-100 w-full" />
                 <div className="flex gap-4 justify-between w-full items-center">
                   <div className="flex gap-8 items-center">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                       <p className="text-zinc-400 text-sm">Total dives</p>
                       <p className="text-zinc-900 font-medium">1.234</p>
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                       <p className="text-zinc-400 text-sm">Location</p>
                       <p className="text-zinc-900 font-medium">
                         Red Cliff Reef
@@ -136,23 +136,32 @@ const Home = () => {
                     </div>
                   </div>
                   <div className="flex gap-8 items-center">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                       <p className="text-zinc-400 text-sm">Guests</p>
                       <p className="text-zinc-900 font-medium">8</p>
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                       <p className="text-zinc-400 text-sm">Max depth</p>
                       <p className="text-zinc-900 font-medium">32 m</p>
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                       <p className="text-zinc-400 text-sm">Equipment</p>
                       <p className="text-zinc-900 font-medium">12</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="bg-white border row-span-2 border-zinc-100 p-8 rounded-3xl"></div>
-              <div className="bg-white border border-zinc-100 p-8 rounded-3xl"></div>
+              <div className="bg-white border border-zinc-100 p-8 rounded-3xl row-span-3">
+                <p className="text-zinc-400">
+                  Guest list
+                </p>
+                <div className="flex flex-col gap-4">
+                  <div>
+
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white border border-zinc-100 p-8 rounded-3xl grid"></div>
               <div className="bg-white border border-zinc-100 p-8 rounded-3xl min-h-[128px]"></div>
             </div>
           )}
