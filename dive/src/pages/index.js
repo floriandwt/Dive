@@ -3,10 +3,16 @@ import Sidebar from "@/components/Sidebar";
 import Image from "next/image";
 import { useState } from "react";
 import * as Icon from "lucide-react";
+import { useQRCode } from "next-qrcode";
+import { QrReader } from "react-qr-reader";
 
 const Home = () => {
+  const { Canvas } = useQRCode();
+  const [data, setData] = useState("No result");
+
   const [currentTab, setCurrentTab] = useState("Dashboard");
   const [online, setOnline] = useState(null);
+  const [planning, setPlanning] = useState(0);
   const [date, setDate] = useState(
     new Date().toLocaleDateString("en-US", {
       weekday: "long",
@@ -15,6 +21,8 @@ const Home = () => {
       day: "numeric",
     })
   );
+
+  const [participants, setParticipants] = useState(0);
 
   const guests = [
     {
@@ -89,6 +97,26 @@ const Home = () => {
         </div>
       )}
       {online && <Navigation online={online} />}
+      {online && online === 2 && (
+        <div className="h-full w-full flex items-center justify-start flex-col px-8 md:justify-center">
+          <h1 className="text-lg font-medium max-md:mt-12 mb-8">
+            Check in with your personal Code:
+          </h1>
+          <Canvas
+            text={"https://hfg-gmuend.de/"}
+            options={{
+              level: "M",
+              margin: 3,
+              scale: 4,
+              width: 250,
+              color: {
+                dark: "#000",
+                light: "#FFF",
+              },
+            }}
+          />
+        </div>
+      )}
       {online && online === 1 && (
         <div className="w-full h-full flex">
           <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
@@ -105,7 +133,13 @@ const Home = () => {
                   No dives for this date yet.
                 </div>
               )}
+            {currentTab === "Dashboard" && planning === 2 && (
+              <div className="text-6xl h-full w-full bg-red-500">
+                
+              </div>
+            )}
             {currentTab === "Dashboard" &&
+              planning < 2 &&
               date ===
                 new Date().toLocaleDateString("en-US", {
                   weekday: "long",
@@ -272,6 +306,14 @@ const Home = () => {
                           </div>
                         </div>
                       ))}
+                      <button
+                        onClick={() => {
+                          setPlanning(1);
+                        }}
+                        className="bg-black rounded-xl text-white font-medium w-full py-4 transition-all hover:bg-zinc-900 mt-8"
+                      >
+                        Start the Check-in
+                      </button>
                     </div>
                   </div>
                   <div className="bg-white border border-zinc-100 p-8 rounded-3xl grid">
@@ -340,8 +382,8 @@ const Home = () => {
                     <div className="w-full flex justify-between items-center mb-8">
                       <p className="text-zinc-400">Dive Site Statistics:</p>
                       <div className="flex items-center gap-2">
-                              <div className="h-1 w-1 rounded-full bg-green-500 animate-ping" />
-                              <p className="text-green-500">Live</p>
+                        <div className="h-1 w-1 rounded-full bg-green-500 animate-ping" />
+                        <p className="text-green-500">Live</p>
                       </div>
                     </div>
                     <div className="h-full w-full flex items-center justify-start flex-col">
@@ -365,7 +407,12 @@ const Home = () => {
               )}
           </div>
           {online && online === 1 && currentTab === "Dashboard" && (
-            <div className="absolute top-6 shadow-lg shadow-zinc-100 py-2.5 flex items-center px-5 font-medium bg-white bg-opacity-80 backdrop-blur-md border border-opacity-5 border-black left-[50%] translate-x-[-50%] rounded-full">
+            <div
+              className={
+                "absolute top-6 shadow-lg shadow-zinc-100 py-2.5 flex items-center px-5 font-medium bg-white bg-opacity-80 backdrop-blur-md border border-opacity-5 border-black left-[50%] translate-x-[-50%] rounded-full " +
+                (planning > 0 && "pointer-events-none")
+              }
+            >
               <div className="flex items-center gap-2">
                 <Icon.ArrowLeft
                   size={30}
@@ -405,6 +452,46 @@ const Home = () => {
               </div>
             </div>
           )}
+        </div>
+      )}
+      {planning === 1 && (
+        <div className="fixed z-[99] bg-black bg-opacity-75 h-screen w-screen flex items-center justify-center">
+          <div className="p-8 rounded-2xl bg-white">
+            <h2 className="text-lg font-semibold">
+              Step 1: Scan the QR Codes of the visitors
+            </h2>
+            <div className="h-96">
+              {data !== "https://hfg-gmuend.de/" && (
+                <QrReader
+                  onResult={(result, error) => {
+                    if (!!result) {
+                      setData(result?.text);
+                      console.log(result?.text);
+                    }
+                  }}
+                  style={{ width: "100%" }}
+                />
+              )}
+              {data === "https://hfg-gmuend.de/" && (
+                <div className="h-full w-full flex items-center flex-col gap-3 justify-end">
+                  <div className="mb-24 flex flex-col justify-center items-center">
+                    <Icon.UserCheck2 size={64} strokeWidth={1.5} />
+                    <p className="text-lg font-medium mt-4">
+                      Participants successfully checked in
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setPlanning(2);
+                    }}
+                    className="bg-black rounded-xl text-white font-medium w-full py-4 transition-all hover:bg-zinc-900"
+                  >
+                    Proceed with the planning
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </main>
