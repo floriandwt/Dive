@@ -13,6 +13,7 @@ const Home = () => {
   const [currentTab, setCurrentTab] = useState("Dashboard");
   const [online, setOnline] = useState(null);
   const [planning, setPlanning] = useState(0);
+  const [routeSelection, setRouteSelection] = useState(1);
   const [date, setDate] = useState(
     new Date().toLocaleDateString("en-US", {
       weekday: "long",
@@ -76,24 +77,35 @@ const Home = () => {
     },
   ];
 
-  const enterApp = () => {
-    fetch("/api/handler")
-      .then((res) => res.json())
-      .then((data) => {
-        setOnline(data.online);
-      });
+  const enterApp = (type) => {
+    if (type === "guide") {
+      setOnline(1);
+    } else {
+      setOnline(2);
+    }
   };
 
   return (
     <main className="h-screen w-screen flex flex-col items-start justify-start">
       {!online && (
-        <div className="h-screen w-screen flex items-center justify-center">
-          <button
-            onClick={enterApp}
-            className="px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 font-medium"
-          >
-            Enter the app
-          </button>
+        <div className="h-screen w-screen flex items-center justify-center flex-col gap-2">
+          <h1 className="text-4xl font-semibold mb-16">
+            How do you want to enter the Demo?
+          </h1>
+          <div className="flex gap-8">
+            <button
+              onClick={() => enterApp("guide")}
+              className="px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 font-medium"
+            >
+              Enter as Guide
+            </button>
+            <button
+              onClick={() => enterApp("guest")}
+              className="px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 font-medium"
+            >
+              Enter as Guest
+            </button>
+          </div>
         </div>
       )}
       {online && <Navigation online={online} />}
@@ -134,8 +146,114 @@ const Home = () => {
                 </div>
               )}
             {currentTab === "Dashboard" && planning === 2 && (
-              <div className="text-6xl h-full w-full bg-red-500">
-                
+              <div className="h-full w-full flex items-start flex-col justify-center pb-10 px-24">
+                <h1 className="text-2xl font-semibold mb-6">
+                  Matching Routes
+                </h1>
+                <div className="w-full flex items-start gap-6 justify-between">
+                  <div
+                    onClick={() => setRouteSelection(1)}
+                    className={"relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 " + (routeSelection === 1 ? "border-green-500" : "")}
+                  >
+                    {routeSelection === 1 && (
+                      <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
+                        <Icon.Check size={20} />
+                        Selection
+                      </div>
+                    )}
+                    <Image
+                      src="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1035&q=80"
+                      width={500}
+                      height={500}
+                      className="rounded-2xl object-cover h-96 w-88"
+                    />
+                    <div className="pl-4 flex flex-col items-start">
+                      <h2 className="text-lg font-medium">Blue Cliff</h2>
+                      <p className="text-zinc-500 mb-4">
+                        1.5 km from the dive base
+                      </p>
+                      <p className="mb-1.5 text-sm text-zinc-500">Group suitability</p>
+                      <div className="flex items-center gap-2 px-2 py-1 bg-green-100 rounded-full text-green-500">
+                        <Icon.Percent strokeWidth={2.5} size={16} />
+                        <p className="font-medium">80</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => setRouteSelection(2)}
+                    className={"relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 " + (routeSelection === 2 ? "border-green-500" : "")}
+                  >
+                    {routeSelection === 2 && (
+                      <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
+                        <Icon.Check size={20} />
+                        Selection
+                      </div>
+                    )}
+                    <Image
+                      src="https://images.unsplash.com/photo-1559494007-9f5847c49d94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80"
+                      width={500}
+                      height={500}
+                      className="rounded-2xl object-cover h-96 w-88"
+                    />
+                    <div className="pl-4 flex flex-col items-start">
+                      <h2 className="text-lg font-medium">Red Cliff</h2>
+                      <p className="text-zinc-500 mb-4">
+                        6 km from the dive base
+                      </p>
+                      <p className="mb-1.5 text-sm text-zinc-500">Group suitability</p>
+                      <div className="flex items-center gap-2 px-2 py-1 bg-orange-100 rounded-full text-orange-500">
+                        <Icon.Percent strokeWidth={2.5} size={16} />
+                        <p className="font-medium">64</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => setRouteSelection(3)}
+                    className={"relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 " + (routeSelection === 3 ? "border-green-500" : "")}
+                  >
+                    {routeSelection === 3 && (
+                      <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
+                        <Icon.Check size={20} />
+                        Selection
+                      </div>
+                    )}
+                    <Image
+                      src="https://images.unsplash.com/photo-1593892370074-ec754b1ac563?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
+                      width={500}
+                      height={500}
+                      className="rounded-2xl object-cover h-96 w-88"
+                    />
+                    <div className="pl-4 flex flex-col items-start">
+                      <h2 className="text-lg font-medium">Brown Cliff</h2>
+                      <p className="text-zinc-500 mb-4">
+                        12 km from the dive base
+                      </p>
+                      <p className="mb-1.5 text-sm text-zinc-500">Group suitability</p>
+                      <div className="flex items-center gap-2 px-2 py-1 bg-red-100 rounded-full text-red-500">
+                        <Icon.Percent strokeWidth={2.5} size={16} />
+                        <p className="font-medium">42</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-12 flex gap-4 justify-between w-full">
+                <button
+                    onClick={() => {
+                      setPlanning(1);
+                    }}
+                    className="bg-transparent border border-black rounded-xl text-black font-medium py-4 px-5 transition-all"
+                  >
+                    <Icon.ArrowLeft size={20} strokeWidth={2.5} />
+                  </button>
+                <button
+                    onClick={() => {
+                      setPlanning(3);
+                    }}
+                    className="bg-black rounded-xl text-white font-medium px-8 py-4 transition-all hover:bg-zinc-900"
+                  >
+                    Proceed with equipment
+                  </button>
+                  </div>
               </div>
             )}
             {currentTab === "Dashboard" &&
@@ -317,7 +435,7 @@ const Home = () => {
                     </div>
                   </div>
                   <div className="bg-white border border-zinc-100 p-8 rounded-3xl grid">
-                    <p className="text-zinc-400 mb-4">Other matching routes:</p>
+                    <p className="text-zinc-400 mb-4">Other matching routes</p>
                     <div className="flex flex-col gap-4 h-full">
                       <div className="w-full flex justify-between gap-3 items-center">
                         <div className="flex items-center gap-3">
@@ -380,7 +498,7 @@ const Home = () => {
                   </div>
                   <div className="bg-white border border-zinc-100 p-8 rounded-3xl min-h-[128px]">
                     <div className="w-full flex justify-between items-center mb-8">
-                      <p className="text-zinc-400">Dive Site Statistics:</p>
+                      <p className="text-zinc-400">Dive side Statistics</p>
                       <div className="flex items-center gap-2">
                         <div className="h-1 w-1 rounded-full bg-green-500 animate-ping" />
                         <p className="text-green-500">Live</p>
@@ -410,10 +528,15 @@ const Home = () => {
             <div
               className={
                 "absolute top-6 shadow-lg shadow-zinc-100 py-2.5 flex items-center px-5 font-medium bg-white bg-opacity-80 backdrop-blur-md border border-opacity-5 border-black left-[50%] translate-x-[-50%] rounded-full " +
-                (planning > 0 && "pointer-events-none")
+                (planning > 0 && "cursor-not-allowed")
               }
             >
-              <div className="flex items-center gap-2">
+              <div
+                className={
+                  "flex items-center gap-2 " +
+                  (planning > 0 && "pointer-events-none")
+                }
+              >
                 <Icon.ArrowLeft
                   size={30}
                   className="cursor-pointer transition-all hover:bg-zinc-100 p-1 rounded-md"
@@ -460,7 +583,7 @@ const Home = () => {
             <h2 className="text-lg font-semibold">
               Step 1: Scan the QR Codes of the visitors
             </h2>
-            <div className="h-96">
+            <div className="h-80">
               {data !== "https://hfg-gmuend.de/" && (
                 <QrReader
                   onResult={(result, error) => {
@@ -474,7 +597,7 @@ const Home = () => {
               )}
               {data === "https://hfg-gmuend.de/" && (
                 <div className="h-full w-full flex items-center flex-col gap-3 justify-end">
-                  <div className="mb-24 flex flex-col justify-center items-center">
+                  <div className="mb-16 flex flex-col justify-center items-center">
                     <Icon.UserCheck2 size={64} strokeWidth={1.5} />
                     <p className="text-lg font-medium mt-4">
                       Participants successfully checked in
