@@ -1,7 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Sidebar from "@/components/Sidebar";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Icon from "lucide-react";
 import { useQRCode } from "next-qrcode";
 import { QrReader } from "react-qr-reader";
@@ -11,7 +11,7 @@ const Home = () => {
   const [data, setData] = useState("No result");
 
   const [currentTab, setCurrentTab] = useState("Dashboard");
-  const [online, setOnline] = useState(null);
+  const [online, setOnline] = useState(1);
   const [planning, setPlanning] = useState(0);
   const [routeSelection, setRouteSelection] = useState(1);
   const [date, setDate] = useState(
@@ -23,59 +23,84 @@ const Home = () => {
     })
   );
 
-  const [participants, setParticipants] = useState(0);
+  const [guests, setGuests] = useState([]);
+  const [latestName, setLatestName] = useState("");
 
-  const guests = [
-    {
-      name: "Jack Miller",
-      padi: "1 Star",
-      image:
-        "https://images.unsplash.com/photo-1580128789542-d484253e94a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-    },
-    {
-      name: "Franz Müller",
-      padi: "2 Star",
-      image:
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    },
-    {
-      name: "John Doe",
-      padi: "3 Star",
-      image:
-        "https://images.unsplash.com/photo-1544551763-8dd44758c2dd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    },
-    {
-      name: "Jane Doe",
-      padi: "2 Star",
-      image:
-        "https://images.unsplash.com/photo-1544642058-1f01423e7a16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    },
-    {
-      name: "Linda Turner",
-      padi: "3 Star",
-      image:
-        "https://images.unsplash.com/photo-1544551763-8dd44758c2dd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    },
-    {
-      name: "Tim Tas",
-      padi: "1 Star",
-      image:
-        "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80",
-    },
-    {
-      name: "Mary Ullman",
-      padi: "2 Star",
-      image:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-    },
+  const [started, setStarted] = useState(false);
 
+  const [routes, setRoutes] = useState([
     {
-      name: "John Lennon",
-      padi: "2 Star",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBvcnRyYWl0fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      name: "Blue Cliff",
+      distance: "1.5 km from the dive base",
+      image: "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a",
+      suitability: 80,
     },
-  ];
+    {
+      name: "Red Cliff",
+      distance: "6 km from the dive base",
+      image: "https://images.unsplash.com/photo-1559494007-9f5847c49d94",
+      suitability: 64,
+    },
+    {
+      name: "Brown Cliff",
+      distance: "12 km from the dive base",
+      image: "https://images.unsplash.com/photo-1593892370074-ec754b1ac563",
+      suitability: 42,
+    },
+  ]);
+
+  useEffect(() => {
+    let fetchNameInterval = setInterval(() => {
+      if (planning === 0 && started === false ) {
+        fetch("/api/latestData")
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.name !== latestName) {
+              console.log(data.name);
+              setLatestName(data.name);
+              setGuests([]);
+              setGuests((guests) => [
+                ...guests,
+                {
+                  name: data.name,
+                  padi: data.star,
+                  image:
+                    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBvcnRyYWl0fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+                },
+              ]);
+              if (data.star === "3 Star") {
+                setRoutes([
+                  {
+                    name: "Elegant Bay",
+                    distance: "12 km from the dive base",
+                    image:
+                      "https://images.unsplash.com/photo-1593892370074-ec754b1ac563",
+                    suitability: 96,
+                  },
+                  {
+                    name: "Techno Reef",
+                    distance: "6 km from the dive base",
+                    image:
+                      "https://images.unsplash.com/photo-1559494007-9f5847c49d94",
+                    suitability: 72,
+                  },
+                  {
+                    name: "Blue Cliff",
+                    distance: "1.5 km from the dive base",
+                    image:
+                      "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a",
+                    suitability: 24,
+                  },
+                ]);
+              }
+            }
+          });
+      }
+    }, 2000);
+    return () => {
+      clearInterval(fetchNameInterval);
+    };
+  }, []);
 
   const enterApp = (type) => {
     if (type === "guide") {
@@ -87,48 +112,7 @@ const Home = () => {
 
   return (
     <main className="h-screen w-screen flex flex-col items-start justify-start">
-      {!online && (
-        <div className="h-screen w-screen flex items-center justify-center flex-col gap-2">
-          <h1 className="text-4xl font-semibold mb-16">
-            How do you want to enter the Demo?
-          </h1>
-          <div className="flex gap-8">
-            <button
-              onClick={() => enterApp("guide")}
-              className="px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 font-medium"
-            >
-              Enter as Guide
-            </button>
-            <button
-              onClick={() => enterApp("guest")}
-              className="px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 font-medium"
-            >
-              Enter as Guest
-            </button>
-          </div>
-        </div>
-      )}
       {online && <Navigation online={online} />}
-      {online && online === 2 && (
-        <div className="h-full w-full flex items-center justify-start flex-col px-8 md:justify-center">
-          <h1 className="text-lg font-medium max-md:mt-12 mb-8">
-            Check in with your personal Code:
-          </h1>
-          <Canvas
-            text={"https://hfg-gmuend.de/"}
-            options={{
-              level: "M",
-              margin: 3,
-              scale: 4,
-              width: 250,
-              color: {
-                dark: "#000",
-                light: "#FFF",
-              },
-            }}
-          />
-        </div>
-      )}
       {online && online === 1 && (
         <div className="w-full h-full flex">
           <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
@@ -145,99 +129,134 @@ const Home = () => {
                   No dives for this date yet.
                 </div>
               )}
-            {currentTab === "Dashboard" && planning === 2 && (
-              <div className="h-full w-full flex items-start flex-col justify-center pb-10 px-24">
-                <h1 className="text-2xl font-semibold mb-6">
-                  Matching Routes
-                </h1>
-                <div className="w-full flex items-start gap-6 justify-between">
-                  <div
-                    onClick={() => setRouteSelection(1)}
-                    className={"relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 " + (routeSelection === 1 ? "border-green-500" : "")}
-                  >
-                    {routeSelection === 1 && (
-                      <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
-                        <Icon.Check size={20} />
-                        Selection
+            {currentTab === "Dashboard" && planning === 1 && (
+              <div className="h-full w-full flex items-start flex-col justify-between pb-10 px-24">
+                <div className="pt-32">
+                  <h1 className="text-2xl font-semibold mb-6">
+                    Matching Routes for {latestName}
+                  </h1>
+                  <div className="w-full flex items-start gap-6 justify-between"></div>
+                  <div className="w-full flex items-start gap-6 justify-between">
+                    {routes.map((route) => (
+                      <div
+                        key={route.name}
+                        onClick={() =>
+                          setRouteSelection(routes.indexOf(route) + 1)
+                        }
+                        className="relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 "
+                      >
+                        {routeSelection === routes.indexOf(route) + 1 && (
+                          <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
+                            <Icon.Check size={20} />
+                            Selection
+                          </div>
+                        )}
+                        <Image
+                          src={route.image}
+                          width={500}
+                          height={500}
+                          className="rounded-2xl object-cover h-96 w-88"
+                        />
+                        <div className="pl-4 flex flex-col items-start">
+                          <h2 className="text-lg font-medium">{route.name}</h2>
+                          <p className="text-zinc-500 mb-4">{route.distance}</p>
+                          <p className="mb-1.5 text-sm text-zinc-500">
+                            Diver suitability
+                          </p>
+                          <div
+                            className={
+                              "flex items-center gap-2 px-2 py-1 " +
+                              (route.suitability >= 80
+                                ? "bg-green-100 rounded-full text-green-500"
+                                : route.suitability <= 72 &&
+                                  route.suitability >= 43
+                                ? "bg-orange-100 rounded-full text-orange-500"
+                                : "bg-red-100 rounded-full text-red-500")
+                            }
+                          >
+                            <Icon.Percent strokeWidth={2.5} size={16} />
+                            <p className="font-medium">{route.suitability}</p>
+                          </div>
+                        </div>
                       </div>
-                    )}
-                    <Image
-                      src="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1035&q=80"
-                      width={500}
-                      height={500}
-                      className="rounded-2xl object-cover h-96 w-88"
-                    />
-                    <div className="pl-4 flex flex-col items-start">
-                      <h2 className="text-lg font-medium">Blue Cliff</h2>
-                      <p className="text-zinc-500 mb-4">
-                        1.5 km from the dive base
-                      </p>
-                      <p className="mb-1.5 text-sm text-zinc-500">Group suitability</p>
-                      <div className="flex items-center gap-2 px-2 py-1 bg-green-100 rounded-full text-green-500">
-                        <Icon.Percent strokeWidth={2.5} size={16} />
-                        <p className="font-medium">80</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    onClick={() => setRouteSelection(2)}
-                    className={"relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 " + (routeSelection === 2 ? "border-green-500" : "")}
-                  >
-                    {routeSelection === 2 && (
-                      <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
-                        <Icon.Check size={20} />
-                        Selection
-                      </div>
-                    )}
-                    <Image
-                      src="https://images.unsplash.com/photo-1559494007-9f5847c49d94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80"
-                      width={500}
-                      height={500}
-                      className="rounded-2xl object-cover h-96 w-88"
-                    />
-                    <div className="pl-4 flex flex-col items-start">
-                      <h2 className="text-lg font-medium">Red Cliff</h2>
-                      <p className="text-zinc-500 mb-4">
-                        6 km from the dive base
-                      </p>
-                      <p className="mb-1.5 text-sm text-zinc-500">Group suitability</p>
-                      <div className="flex items-center gap-2 px-2 py-1 bg-orange-100 rounded-full text-orange-500">
-                        <Icon.Percent strokeWidth={2.5} size={16} />
-                        <p className="font-medium">64</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    onClick={() => setRouteSelection(3)}
-                    className={"relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 " + (routeSelection === 3 ? "border-green-500" : "")}
-                  >
-                    {routeSelection === 3 && (
-                      <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
-                        <Icon.Check size={20} />
-                        Selection
-                      </div>
-                    )}
-                    <Image
-                      src="https://images.unsplash.com/photo-1593892370074-ec754b1ac563?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
-                      width={500}
-                      height={500}
-                      className="rounded-2xl object-cover h-96 w-88"
-                    />
-                    <div className="pl-4 flex flex-col items-start">
-                      <h2 className="text-lg font-medium">Brown Cliff</h2>
-                      <p className="text-zinc-500 mb-4">
-                        12 km from the dive base
-                      </p>
-                      <p className="mb-1.5 text-sm text-zinc-500">Group suitability</p>
-                      <div className="flex items-center gap-2 px-2 py-1 bg-red-100 rounded-full text-red-500">
-                        <Icon.Percent strokeWidth={2.5} size={16} />
-                        <p className="font-medium">42</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
                 <div className="mt-12 flex gap-4 justify-between w-full">
-                <button
+                  <button
+                    onClick={() => {
+                      setPlanning(0);
+                    }}
+                    className="bg-transparent border border-black rounded-xl text-black font-medium py-4 px-5 transition-all"
+                  >
+                    <Icon.ArrowLeft size={20} strokeWidth={2.5} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPlanning(2);
+                    }}
+                    className="bg-black rounded-xl text-white font-medium px-8 py-4 transition-all hover:bg-zinc-900"
+                  >
+                    Proceed with equipment
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {currentTab === "Dashboard" && planning === 2 && (
+              <div className="h-full w-full flex items-start flex-col justify-between pb-10 px-24">
+                <div className="pt-32">
+                  <h1 className="text-2xl font-semibold mb-6">
+                    Equipment for {latestName}
+                  </h1>
+                  <div className="w-full flex items-start gap-6 justify-between">
+                    {routes.map((route) => (
+                      <div
+                        key={route.name}
+                        onClick={() =>
+                          setRouteSelection(routes.indexOf(route) + 1)
+                        }
+                        className="relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 "
+                      >
+                        {routeSelection === routes.indexOf(route) + 1 && (
+                          <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
+                            <Icon.Check size={20} />
+                            Selection
+                          </div>
+                        )}
+                        <Image
+                          src={route.image}
+                          width={500}
+                          height={500}
+                          className="rounded-2xl object-cover h-96 w-88"
+                        />
+                        <div className="pl-4 flex flex-col items-start">
+                          <h2 className="text-lg font-medium">{route.name}</h2>
+                          <p className="text-zinc-500 mb-4">{route.distance}</p>
+                          <p className="mb-1.5 text-sm text-zinc-500">
+                            Diver suitability
+                          </p>
+                          <div
+                            className={
+                              "flex items-center gap-2 px-2 py-1 " +
+                              (route.suitability >= 80
+                                ? "bg-green-100 rounded-full text-green-500"
+                                : route.suitability <= 72 &&
+                                  route.suitability >= 43
+                                ? "bg-orange-100 rounded-full text-orange-500"
+                                : "bg-red-100 rounded-full text-red-500")
+                            }
+                          >
+                            <Icon.Percent strokeWidth={2.5} size={16} />
+                            <p className="font-medium">{route.suitability}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-12 flex gap-4 justify-between w-full">
+                  <button
                     onClick={() => {
                       setPlanning(1);
                     }}
@@ -245,19 +264,20 @@ const Home = () => {
                   >
                     <Icon.ArrowLeft size={20} strokeWidth={2.5} />
                   </button>
-                <button
+                  <button
                     onClick={() => {
                       setPlanning(3);
                     }}
                     className="bg-black rounded-xl text-white font-medium px-8 py-4 transition-all hover:bg-zinc-900"
                   >
-                    Proceed with equipment
+                    Finish planning
                   </button>
-                  </div>
+                </div>
               </div>
             )}
+
             {currentTab === "Dashboard" &&
-              planning < 2 &&
+              planning < 1 &&
               date ===
                 new Date().toLocaleDateString("en-US", {
                   weekday: "long",
@@ -391,109 +411,92 @@ const Home = () => {
                     </div>
                   </div>
                   <div className="bg-white border border-zinc-100 p-8 rounded-3xl row-span-3">
-                    <p className="text-zinc-400 mb-8">Guest list</p>
-                    <div className="flex flex-col gap-3">
-                      {guests.map((guest) => (
-                        <div className="flex justify-between items-center px-2.5 py-2 rounded-md cursor-pointer transition-all hover:bg-zinc-100 max-xl:flex-col max-xl:gap-4 max-xl:items-start">
-                          <div className="flex items-center gap-3 font-medium">
-                            <Image
-                              src={guest.image}
-                              width={40}
-                              height={40}
-                              className="rounded-full h-8 w-8 object-cover object-top"
-                            />
-                            {guest.name}
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            <p className="text-xs text-zinc-400">
-                              Padi Status:
-                            </p>
-                            <div
-                              className={
-                                "flex items-center gap-2 " +
-                                (guest.padi === "1 Star"
-                                  ? "text-red-500"
-                                  : guest.padi === "2 Star"
-                                  ? "text-yellow-500"
-                                  : "text-green-500")
-                              }
-                            >
-                              <Icon.Ticket size={20} />
-                              {guest.padi}
+                    {guests.length === 0 && (
+                      <div className="flex flex-col gap-4 h-full justify-between bg-zinc-100 animate-pulse rounded-2xl" />
+                    )}
+                    {guests.length > 0 && (
+                      <p className="text-zinc-400 mb-8">Guest list</p>
+                    )}
+                    <div className="flex flex-col gap-3 h-full justify-between">
+                      {guests.length > 0 &&
+                        guests.map((guest) => (
+                          <div className="flex justify-between items-center px-2.5 py-2 rounded-md cursor-pointer transition-all hover:bg-zinc-100 max-xl:flex-col max-xl:gap-4 max-xl:items-start">
+                            <div className="flex items-center gap-3 font-medium">
+                              <Image
+                                src={guest.image}
+                                width={40}
+                                height={40}
+                                className="rounded-full h-8 w-8 object-cover object-top"
+                              />
+                              {guest.name}
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <p className="text-xs text-zinc-400">
+                                Padi Status:
+                              </p>
+                              <div
+                                className={
+                                  "flex items-center gap-2 " +
+                                  (guest.padi === "1 Star"
+                                    ? "text-red-500"
+                                    : guest.padi === "2 Star"
+                                    ? "text-yellow-500"
+                                    : "text-green-500")
+                                }
+                              >
+                                <Icon.Ticket size={20} />
+                                {guest.padi}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                      <button
-                        onClick={() => {
-                          setPlanning(1);
-                        }}
-                        className="bg-black rounded-xl text-white font-medium w-full py-4 transition-all hover:bg-zinc-900 mt-8"
-                      >
-                        Start the Check-in
-                      </button>
+                        ))}
+                      {guests.length > 0 && (
+                        <button
+                          onClick={() => {
+                            setPlanning(1);
+                            setStarted(true);
+                          }}
+                          className="bg-black rounded-xl text-white font-medium w-full py-4 transition-all hover:bg-zinc-900 mt-8 mb-14"
+                        >
+                          Start the Planning
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="bg-white border border-zinc-100 p-8 rounded-3xl grid">
-                    <p className="text-zinc-400 mb-4">Other matching routes</p>
+                    <p className="text-zinc-400 mb-4">Matching routes</p>
                     <div className="flex flex-col gap-4 h-full">
-                      <div className="w-full flex justify-between gap-3 items-center">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center gap-2 px-2 py-1 bg-green-100 rounded-full text-green-500">
-                            <Icon.Percent strokeWidth={2.5} size={16} />
-                            <p className="font-medium">80</p>
+                      {routes.map((route) => (
+                        <div className="w-full flex justify-between gap-3 items-center">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={
+                                "flex items-center gap-2 px-2 py-1 " +
+                                (route.suitability >= 80
+                                  ? "bg-green-100 rounded-full text-green-500"
+                                  : route.suitability <= 72 &&
+                                    route.suitability >= 43
+                                  ? "bg-orange-100 rounded-full text-orange-500"
+                                  : "bg-red-100 rounded-full text-red-500")
+                              }
+                            >
+                              <Icon.Percent strokeWidth={2.5} size={16} />
+                              <p className="font-medium">{route.suitability}</p>
+                            </div>
+                            <p className="font-medium">{route.name}</p>
                           </div>
-                          <p className="font-medium">Blue Cliff</p>
-                        </div>
-                        <div className="flex gap-1 items-center">
-                          <Icon.Check
-                            size={28}
-                            className="p-1 rounded-md transition-all hover:bg-zinc-100 cursor-pointer"
-                          />
-                          <Icon.X
-                            size={28}
-                            className="p-1 rounded-md transition-all hover:bg-zinc-100 cursor-pointer"
-                          />
-                        </div>
-                      </div>
-                      <div className="w-full flex justify-between gap-3 items-center">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center gap-2 px-2 py-1 bg-orange-100 rounded-full text-orange-500">
-                            <Icon.Percent strokeWidth={2.5} size={16} />
-                            <p className="font-medium">64</p>
+                          <div className="flex gap-1 items-center">
+                            <Icon.Check
+                              size={28}
+                              className="p-1 rounded-md transition-all hover:bg-zinc-100 cursor-pointer"
+                            />
+                            <Icon.X
+                              size={28}
+                              className="p-1 rounded-md transition-all hover:bg-zinc-100 cursor-pointer"
+                            />
                           </div>
-                          <p className="font-medium">Red Cliff</p>
                         </div>
-                        <div className="flex gap-1 items-center">
-                          <Icon.Check
-                            size={28}
-                            className="p-1 rounded-md transition-all hover:bg-zinc-100 cursor-pointer"
-                          />
-                          <Icon.X
-                            size={28}
-                            className="p-1 rounded-md transition-all hover:bg-zinc-100 cursor-pointer"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-full flex justify-between gap-3 items-center">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 px-2 py-1 bg-red-100 rounded-full text-red-500">
-                          <Icon.Percent strokeWidth={2.5} size={16} />
-                          <p className="font-medium">42</p>
-                        </div>
-                        <p className="font-medium">Brown Cliff</p>
-                      </div>
-                      <div className="flex gap-1 items-center">
-                        <Icon.Check
-                          size={28}
-                          className="p-1 rounded-md transition-all hover:bg-zinc-100 cursor-pointer"
-                        />
-                        <Icon.X
-                          size={28}
-                          className="p-1 rounded-md transition-all hover:bg-zinc-100 cursor-pointer"
-                        />
-                      </div>
+                      ))}
                     </div>
                   </div>
                   <div className="bg-white border border-zinc-100 p-8 rounded-3xl min-h-[128px]">
@@ -575,46 +578,6 @@ const Home = () => {
               </div>
             </div>
           )}
-        </div>
-      )}
-      {planning === 1 && (
-        <div className="fixed z-[99] bg-black bg-opacity-75 h-screen w-screen flex items-center justify-center">
-          <div className="p-8 rounded-2xl bg-white">
-            <h2 className="text-lg font-semibold">
-              Step 1: Scan the QR Codes of the visitors
-            </h2>
-            <div className="h-80">
-              {data !== "https://hfg-gmuend.de/" && (
-                <QrReader
-                  onResult={(result, error) => {
-                    if (!!result) {
-                      setData(result?.text);
-                      console.log(result?.text);
-                    }
-                  }}
-                  style={{ width: "100%" }}
-                />
-              )}
-              {data === "https://hfg-gmuend.de/" && (
-                <div className="h-full w-full flex items-center flex-col gap-3 justify-end">
-                  <div className="mb-16 flex flex-col justify-center items-center">
-                    <Icon.UserCheck2 size={64} strokeWidth={1.5} />
-                    <p className="text-lg font-medium mt-4">
-                      Participants successfully checked in
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setPlanning(2);
-                    }}
-                    className="bg-black rounded-xl text-white font-medium w-full py-4 transition-all hover:bg-zinc-900"
-                  >
-                    Proceed with the planning
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       )}
     </main>

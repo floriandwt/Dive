@@ -8,7 +8,7 @@ function Sidebar({ currentTab, setCurrentTab }) {
         <Link
           href="#"
           className={"px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 " + (currentTab === "Dashboard" && "text-black")}
-          onClick={() => setCurrentTab("Dashboard")}
+          // onClick={() => setCurrentTab("Dashboard")}
         >
           <Icon.LayoutDashboard size={20} />
           Dashboard
@@ -16,7 +16,7 @@ function Sidebar({ currentTab, setCurrentTab }) {
         <Link
           href="#"
           className={"px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 " + (currentTab === "Routes" && "text-black")}
-          onClick={() => setCurrentTab("Routes")}
+          // onClick={() => setCurrentTab("Routes")}
         >
           <Icon.MapIcon size={20} />
           Routes
@@ -24,7 +24,7 @@ function Sidebar({ currentTab, setCurrentTab }) {
         <Link
           href="#"
           className={"px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 " + (currentTab === "Evaluation" && "text-black")}
-          onClick={() => setCurrentTab("Evaluation")}
+          // onClick={() => setCurrentTab("Evaluation")}
         >
           <Icon.User size={20} />
           Evaluation
@@ -34,7 +34,7 @@ function Sidebar({ currentTab, setCurrentTab }) {
       <Link
           href="#"
           className={"px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 " + (currentTab === "Statistics" && "text-black")}
-          onClick={() => setCurrentTab("Statistics")}
+          // onClick={() => setCurrentTab("Statistics")}
         >
           <Icon.BarChart2 size={20} />
           Statistics
@@ -42,7 +42,7 @@ function Sidebar({ currentTab, setCurrentTab }) {
         <Link
           href="#"
           className={"px-3 py-2 hover:bg-zinc-100 transition-all cursor-pointer rounded-md flex items-center gap-3 " + (currentTab === "Settings" && "text-black")}
-          onClick={() => setCurrentTab("Settings")}
+          // onClick={() => setCurrentTab("Settings")}
         >
           <Icon.Settings size={20} />
           Settings
