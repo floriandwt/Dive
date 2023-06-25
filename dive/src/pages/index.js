@@ -51,7 +51,7 @@ const Home = () => {
 
   useEffect(() => {
     let fetchNameInterval = setInterval(() => {
-      if (planning === 0 && started === false ) {
+      if (planning === 0) {
         fetch("/api/latestData")
           .then((res) => res.json())
           .then((data) => {
@@ -101,14 +101,6 @@ const Home = () => {
       clearInterval(fetchNameInterval);
     };
   }, []);
-
-  const enterApp = (type) => {
-    if (type === "guide") {
-      setOnline(1);
-    } else {
-      setOnline(2);
-    }
-  };
 
   return (
     <main className="h-screen w-screen flex flex-col items-start justify-start">

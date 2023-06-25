@@ -44,7 +44,7 @@ function entry() {
               Cancel
             </button>
             </div>
-            <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 mx-auto">
+            <div className="p-2 rounded-[14px] bg-gradient-to-tr from-blue-400 to-purple-500 mx-auto">
               <Icon.Waves className="text-white w-8 h-8" />
             </div>
             <div className="flex-col flex gap-1">
@@ -81,7 +81,7 @@ function entry() {
       {!loading && submitted && (
         <div className="px-[10%] pt-12 pb-24 bg-zinc-100 bg-opacity-70 backdrop-blur-lg w-full h-[500px]">
           <div className="max-w-[280px] flex flex-col gap-8 mx-auto">
-            <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 mx-auto mb-4">
+            <div className="p-2 rounded-[14px] bg-gradient-to-tr from-blue-400 to-purple-500 mx-auto mb-4">
               <Icon.Waves className="text-white w-8 h-8" />
             </div>
             <h1 className="text-2xl font-semibold text-gray-800 leading-tight">
