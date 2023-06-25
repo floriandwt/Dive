@@ -4,7 +4,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import * as Icon from "lucide-react";
 import { useQRCode } from "next-qrcode";
-import { QrReader } from "react-qr-reader";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import Buddy from "./utils/Buddy";
 
 const Home = () => {
   const { Canvas } = useQRCode();
@@ -135,7 +137,11 @@ const Home = () => {
                         onClick={() =>
                           setRouteSelection(routes.indexOf(route) + 1)
                         }
-                        className="relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 "
+                        className={
+                          "relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 " +
+                          (routeSelection === routes.indexOf(route) + 1 &&
+                            "ring-4 ring-green-500")
+                        }
                       >
                         {routeSelection === routes.indexOf(route) + 1 && (
                           <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
@@ -197,54 +203,14 @@ const Home = () => {
 
             {currentTab === "Dashboard" && planning === 2 && (
               <div className="h-full w-full flex items-start flex-col justify-between pb-8 px-24">
-                <div className="pt-32">
+                <div className="pt-32 w-full">
                   <h1 className="text-2xl font-semibold mb-6">
-                    Equipment for {latestName}
+                    Choose a buddy for {latestName}
                   </h1>
-                  <div className="w-full flex items-start gap-6 justify-between">
-                    {routes.map((route) => (
-                      <div
-                        key={route.name}
-                        onClick={() =>
-                          setRouteSelection(routes.indexOf(route) + 1)
-                        }
-                        className="relative flex items-start flex-col gap-5 cursor-pointer transition-all p-4 rounded-3xl bg-white shadow-lg shadow-zinc-100 border border-zinc-300 border-opacity-40 "
-                      >
-                        {routeSelection === routes.indexOf(route) + 1 && (
-                          <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
-                            <Icon.Check size={20} />
-                            Selection
-                          </div>
-                        )}
-                        <Image
-                          src={route.image}
-                          width={500}
-                          height={500}
-                          className="rounded-2xl object-cover h-96 w-88"
-                        />
-                        <div className="pl-4 flex flex-col items-start">
-                          <h2 className="text-lg font-medium">{route.name}</h2>
-                          <p className="text-zinc-500 mb-4">{route.distance}</p>
-                          <p className="mb-1.5 text-sm text-zinc-500">
-                            Diver suitability
-                          </p>
-                          <div
-                            className={
-                              "flex items-center gap-2 px-2 py-1 " +
-                              (route.suitability >= 80
-                                ? "bg-green-100 rounded-full text-green-500"
-                                : route.suitability <= 72 &&
-                                  route.suitability >= 43
-                                ? "bg-orange-100 rounded-full text-orange-500"
-                                : "bg-red-100 rounded-full text-red-500")
-                            }
-                          >
-                            <Icon.Percent strokeWidth={2.5} size={16} />
-                            <p className="font-medium">{route.suitability}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="w-full gap-6">
+                    <DndProvider backend={HTML5Backend} className="w-full">
+                      <Buddy className="w-full" />
+                    </DndProvider>
                   </div>
                 </div>
                 <div className="mt-12 flex gap-4 justify-between w-full">
@@ -428,7 +394,7 @@ const Home = () => {
                             </div>
                             <div className="flex flex-col gap-1">
                               <p className="text-xs text-zinc-400">
-                                Padi Status:
+                                Diver Level:
                               </p>
                               <div
                                 className={
@@ -441,7 +407,7 @@ const Home = () => {
                                 }
                               >
                                 <Icon.Ticket size={20} />
-                                {guest.padi}
+                                {guest.padi} Padi
                               </div>
                             </div>
                           </div>

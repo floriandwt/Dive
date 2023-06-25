@@ -22,7 +22,7 @@ function Navigation({ online }) {
           className="h-8 w-8 rounded-full bg-zinc-200 object-cover object-top"
         />
         <p className="font-medium">
-          {online === 1 ? "Joan Ritter" : "André Jacoby"}
+          {online === 1 ? "Robert Marc Lehman" : "André Jacoby"}
         </p>
       </div>
     </div>
