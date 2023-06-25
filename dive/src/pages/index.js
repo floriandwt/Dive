@@ -65,7 +65,7 @@ const Home = () => {
                   name: data.name,
                   padi: data.star,
                   image:
-                    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBvcnRyYWl0fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+                    "https://uploads-ssl.webflow.com/646b8238ccbfdf0cd7f59ae7/648c9cb5851c80e470063c8d_1661160141860.webp",
                 },
               ]);
               if (data.star === "3 Star") {
@@ -122,7 +122,7 @@ const Home = () => {
                 </div>
               )}
             {currentTab === "Dashboard" && planning === 1 && (
-              <div className="h-full w-full flex items-start flex-col justify-between pb-10 px-24">
+              <div className="h-full w-full flex items-start flex-col justify-between pb-8 px-24">
                 <div className="pt-32">
                   <h1 className="text-2xl font-semibold mb-6">
                     Matching Routes for {latestName}
@@ -196,7 +196,7 @@ const Home = () => {
             )}
 
             {currentTab === "Dashboard" && planning === 2 && (
-              <div className="h-full w-full flex items-start flex-col justify-between pb-10 px-24">
+              <div className="h-full w-full flex items-start flex-col justify-between pb-8 px-24">
                 <div className="pt-32">
                   <h1 className="text-2xl font-semibold mb-6">
                     Equipment for {latestName}
@@ -414,12 +414,16 @@ const Home = () => {
                         guests.map((guest) => (
                           <div className="flex justify-between items-center px-2.5 py-2 rounded-md cursor-pointer transition-all hover:bg-zinc-100 max-xl:flex-col max-xl:gap-4 max-xl:items-start">
                             <div className="flex items-center gap-3 font-medium">
-                              <Image
+                              {/* <Image
                                 src={guest.image}
                                 width={40}
                                 height={40}
                                 className="rounded-full h-8 w-8 object-cover object-top"
-                              />
+                              /> */}
+                              <div className="h-10 flex items-center justify-center rounded-full bg-zinc-300 w-10 relative overflow-hidden">
+                                <div className="h-3.5 w-3.5 rounded-full bg-zinc-500 ring-4 relative z-10 ring-zinc-300" />
+                                <div className="h-8 w-8 top-7 absolute rounded-full bg-zinc-500" />
+                              </div>
                               {guest.name}
                             </div>
                             <div className="flex flex-col gap-1">
