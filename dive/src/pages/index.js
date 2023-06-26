@@ -11,6 +11,7 @@ import Buddy from "./utils/Buddy";
 const Home = () => {
   const { Canvas } = useQRCode();
   const [data, setData] = useState("No result");
+  const [buddy, setBuddy] = useState('');
 
   const [currentTab, setCurrentTab] = useState("Dashboard");
   const [online, setOnline] = useState(1);
@@ -125,7 +126,7 @@ const Home = () => {
               )}
             {currentTab === "Dashboard" && planning === 1 && (
               <div className="h-full w-full flex items-start flex-col justify-between pb-8 px-24">
-                <div className="pt-32">
+                <div className="pt-4">
                   <h1 className="text-2xl font-semibold mb-6">
                     Matching Routes for {latestName}
                   </h1>
@@ -144,9 +145,9 @@ const Home = () => {
                         }
                       >
                         {routeSelection === routes.indexOf(route) + 1 && (
-                          <div className="absolute px-3 py-1 top-3 left-3 rounded-full bg-green-500 text-white z-10 flex gap-1.5 items-center">
+                          <div className="absolute px-3 py-1 top-4 left-4 rounded-br-xl rounded-tl-2xl bg-green-500 text-white z-10 flex gap-1.5 items-center">
                             <Icon.Check size={20} />
-                            Selection
+                            Selected
                           </div>
                         )}
                         <Image
@@ -195,7 +196,7 @@ const Home = () => {
                     }}
                     className="bg-black rounded-xl text-white font-medium px-8 py-4 transition-all hover:bg-zinc-900"
                   >
-                    Proceed with equipment
+                    Proceed with buddy
                   </button>
                 </div>
               </div>
@@ -203,13 +204,13 @@ const Home = () => {
 
             {currentTab === "Dashboard" && planning === 2 && (
               <div className="h-full w-full flex items-start flex-col justify-between pb-8 px-24">
-                <div className="pt-32 w-full">
+                <div className="pt-4 w-full">
                   <h1 className="text-2xl font-semibold mb-6">
                     Choose a buddy for {latestName}
                   </h1>
                   <div className="w-full gap-6">
                     <DndProvider backend={HTML5Backend} className="w-full">
-                      <Buddy className="w-full" />
+                      <Buddy className="w-full" buddy={buddy} setBuddy={setBuddy} />
                     </DndProvider>
                   </div>
                 </div>
@@ -225,6 +226,37 @@ const Home = () => {
                   <button
                     onClick={() => {
                       setPlanning(3);
+                    }}
+                    className="bg-black rounded-xl text-white font-medium px-8 py-4 transition-all hover:bg-zinc-900"
+                  >
+                    Proceed with equipment 
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {currentTab === "Dashboard" && planning === 3 && (
+              <div className="h-full w-full flex items-start flex-col justify-between pb-8 px-24">
+                <div className="pt-4 w-full">
+                  <h1 className="text-2xl font-semibold mb-6">
+                    Choose equipment for {latestName}
+                  </h1>
+                </div>
+                <div className="h-full w-full">
+                  Test
+                </div>
+                <div className="mt-12 flex gap-4 justify-between w-full">
+                  <button
+                    onClick={() => {
+                      setPlanning(2);
+                    }}
+                    className="bg-transparent border border-black rounded-xl text-black font-medium py-4 px-5 transition-all"
+                  >
+                    <Icon.ArrowLeft size={20} strokeWidth={2.5} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPlanning(4);
                     }}
                     className="bg-black rounded-xl text-white font-medium px-8 py-4 transition-all hover:bg-zinc-900"
                   >

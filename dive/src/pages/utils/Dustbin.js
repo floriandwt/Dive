@@ -12,7 +12,7 @@ const style = {
 //   lineHeight: 'normal',
 //   float: 'left',
 }
-export const Dustbin = () => {
+export const Dustbin = ({ buddy }) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.BOX,
     drop: () => ({ name: 'Dustbin' }),
@@ -30,7 +30,8 @@ export const Dustbin = () => {
   }
   return (
     <div ref={drop} style={{ ...style, backgroundColor }} className="text-black w-full h-96 flex items-center justify-center mb-8 rounded-3xl" data-testid="dustbin">
-      <h1 className="text-3xl font-medium opacity-25">{isActive ? 'Release to set Buddy' : 'Drag a Buddy here'}</h1>
+      {buddy === "" && <h1 className="text-3xl font-medium opacity-25">{isActive ? 'Release to set Buddy' : 'Drag a Buddy here'}</h1>}
+      {buddy !== "" && <h1 className="text-3xl font-medium">{isActive ? 'Release to set Buddy' : buddy}</h1>}
     </div>
   )
 }
