@@ -266,6 +266,71 @@ const Home = () => {
               </div>
             )}
 
+            {currentTab === "Dashboard" && planning === 4 && (
+              <div className="h-full w-full flex items-start flex-col justify-between pb-8 px-24">
+                <div className="pt-4 w-full">
+                  <h1 className="text-2xl font-semibold mb-6">
+                  You've finished checking in {latestName}
+                  </h1>
+                </div>
+                <div className="h-full w-full">
+                  <p className="text-zinc-500 mb-8">Here is a small summary:</p>
+                  <div className="grid grid-cols-3 w-full gap-8">
+                    <div className="flex flex-col gap-8 border rounded-3xl border-zinc-200 bg-white p-6 h-full">
+                      <p className="text-zinc-500 font-medium">Selected route</p>
+                      <Image 
+                        src={routes[routeSelection].image}
+                        width={500}
+                        height={500}
+                        className="rounded-2xl object-cover h-96 w-88"
+                      />
+                      <p className="text-black font-medium text-lg">{routes[routeSelection].name}</p>
+                    </div>
+                    <div className="flex flex-col gap-8 border rounded-3xl border-zinc-200 bg-white p-6 h-full">
+                      <p className="text-zinc-500 font-medium">Selected Buddy</p>
+                      {/* <Image 
+                        src={routes[routeSelection].image}
+                        width={500}
+                        height={500}
+                        className="rounded-2xl object-cover h-96 w-88"
+                      /> */}
+                      <p className="h-96">{buddy}</p>
+                      <p className="text-black font-medium text-lg">{buddy}</p>
+                    </div>
+                    <div className="flex flex-col gap-8 border rounded-3xl border-zinc-200 bg-white p-6 h-full">
+                      <p className="text-zinc-500 font-medium">Selected Equipment</p>
+                      {/* <Image 
+                        src={routes[routeSelection].image}
+                        width={500}
+                        height={500}
+                        className="rounded-2xl object-cover h-96 w-88"
+                      /> */}
+                      <p className="h-96">{buddy}</p>
+                      <p className="text-black font-medium text-lg">{buddy}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-12 flex gap-4 justify-between w-full">
+                  <button
+                    onClick={() => {
+                      setPlanning(3);
+                    }}
+                    className="bg-transparent border border-black rounded-xl text-black font-medium py-4 px-5 transition-all"
+                  >
+                    <Icon.ArrowLeft size={20} strokeWidth={2.5} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPlanning(4);
+                    }}
+                    className="bg-black opacity-0 pointer-events-none rounded-xl text-white font-medium px-8 py-4 transition-all hover:bg-zinc-900"
+                  >
+                    Continue to dashboard
+                  </button>
+                </div>
+              </div>
+            )}
+
             {currentTab === "Dashboard" &&
               planning < 1 &&
               date ===
