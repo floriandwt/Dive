@@ -1,5 +1,5 @@
 import * as Icon from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 function entry() {
   const [loading, setLoading] = useState(false);
@@ -29,10 +29,14 @@ function entry() {
     }, 2000);
   };
 
+  useEffect(() => {
+    // set intervall for checking 
+  }, []);
+
   return (
     <div className="bg-[url('/images/dive.jpg')] bg-cover bg-center h-screen w-screen flex items-end justify-center">
       {!loading && !submitted && (
-        <div className="px-[10%] pt-6 pb-16 bg-zinc-100 bg-opacity-70 backdrop-blur-lg w-full h-[500px]">
+        <div className="px-[5%] pt-6 pb-16 bg-white rounded-t-3xl backdrop-blur-lg w-full h-[500px]">
           <div className="max-w-[280px] flex flex-col gap-8 mx-auto">
             <div className="w-full flex justify-between items-center mb-8">
             <h1 className="text-lg font-semibold text-black leading-tight">
@@ -58,7 +62,7 @@ function entry() {
                 className="border border-zinc-500 border-opacity-40 text-black bg-transparent rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
               />
             </div>
-            <div className="my-1 h-[1px] bg-zinc-500 bg-opacity-30" />
+            {/* <div className="my-1 h-[1px] bg-zinc-500 bg-opacity-30" /> */}
             <button
               onClick={submitData}
               className="bg-[#007AFF] text-white px-6 py-2 rounded-xl mx-auto"

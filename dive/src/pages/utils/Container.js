@@ -10,7 +10,7 @@ export const Container = memo(function Container({ buddy, setBuddy }) {
       <div style={{ overflow: 'hidden', clear: 'both' }}>
         <Dustbin buddy={buddy} />
       </div>
-      <p className="mb-4 mt-8 font-medium text-xl">Other group members:</p>
+      <p className="mb-4 mt-8 font-medium text-xl">Group members:</p>
       <div style={{ overflow: 'hidden', clear: 'both' }} className="flex gap-8">
         <Box name="Ulrike Iller" setBuddy={setBuddy} />
         <Box name="Sam Kugloch" setBuddy={setBuddy} />
