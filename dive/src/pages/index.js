@@ -210,7 +210,7 @@ const Home = () => {
                   </h1>
                   <div className="w-full gap-6">
                     <DndProvider backend={HTML5Backend} className="w-full">
-                      <Buddy className="w-full" buddy={buddy} setBuddy={setBuddy} />
+                      <Buddy className="w-full" buddy={buddy} setBuddy={setBuddy} latestName={latestName} />
                     </DndProvider>
                   </div>
                 </div>
@@ -242,8 +242,13 @@ const Home = () => {
                     Choose equipment for {latestName}
                   </h1>
                 </div>
-                <div className="h-full w-full">
-                  Test
+                <div className="h-full max-h-[700px] w-full overflow-hidden">
+                  <Image 
+                    src="./images/equipment.svg"
+                    width={1500}
+                    height={1000}
+                    className="rounded-2xl object-contain max-h-[500] w-full"
+                  />
                 </div>
                 <div className="mt-12 flex gap-4 justify-between w-full">
                   <button
@@ -257,6 +262,15 @@ const Home = () => {
                   <button
                     onClick={() => {
                       setPlanning(4);
+
+                      // post request to backend
+                      fetch("/api/latestData", {
+                        method: "POST",
+                        body: JSON.stringify({ onboarding: 1 }),
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                      });
                     }}
                     className="bg-black rounded-xl text-white font-medium px-8 py-4 transition-all hover:bg-zinc-900"
                   >
@@ -274,7 +288,7 @@ const Home = () => {
                   </h1>
                 </div>
                 <div className="h-full w-full">
-                  <p className="text-zinc-500 mb-8">Here is a small summary:</p>
+                  <p className="text-zinc-500 mb-8">Here is a summary:</p>
                   <div className="grid grid-cols-3 w-full gap-8">
                     <div className="flex flex-col gap-8 border rounded-3xl border-zinc-200 bg-white p-6 h-full">
                       <p className="text-zinc-500 font-medium">Selected route</p>
@@ -294,19 +308,18 @@ const Home = () => {
                         height={500}
                         className="rounded-2xl object-cover h-96 w-88"
                       /> */}
-                      <p className="h-96">{buddy}</p>
+                      <p className="h-96 w-full flex items-center justify-center font-medium text-2xl opacity-30">{buddy}</p>
                       <p className="text-black font-medium text-lg">{buddy}</p>
                     </div>
                     <div className="flex flex-col gap-8 border rounded-3xl border-zinc-200 bg-white p-6 h-full">
                       <p className="text-zinc-500 font-medium">Selected Equipment</p>
-                      {/* <Image 
-                        src={routes[routeSelection].image}
+                      <Image 
+                        src="./images/equipment.svg"
                         width={500}
                         height={500}
                         className="rounded-2xl object-cover h-96 w-88"
-                      /> */}
-                      <p className="h-96">{buddy}</p>
-                      <p className="text-black font-medium text-lg">{buddy}</p>
+                      />
+                      <p className="text-black font-medium text-lg">Scuba Tank XL</p>
                     </div>
                   </div>
                 </div>
@@ -504,7 +517,7 @@ const Home = () => {
                                 }
                               >
                                 <Icon.Ticket size={20} />
-                                {guest.padi} Padi
+                                {guest.padi} PADI
                               </div>
                             </div>
                           </div>
