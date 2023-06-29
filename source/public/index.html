@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IKS</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/@rive-app/canvas@1.0.102"></script>
+</head>
+
+<body class="bg-white h-screen w-screen">
+    <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="100%" height="100%"
+        src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FygoyzkHfCuN4dNkxr8RWC1%2FInterface-Design-2%3Fpage-id%3D453%253A602%26node-id%3D597-914%26scaling%3Dscale-down%26starting-point-node-id%3D597%253A914%26show-proto-sidebar%3D1%26mode%3Ddesign%26t%3DnHIaIvuSreojZPHv-1"
+        allowfullscreen></iframe>
+    <script>
+        // Function to check if the color is too blue
+        function isTooBlue(color) {
+            // Extract the RGB components
+            var r = color >> 16 & 255;
+            var g = color >> 8 & 255;
+            var b = color & 255;
+
+            // Calculate the blue level as a percentage
+            var blueLevel = (b / (r + g + b)) * 100;
+
+            // Check if the blue level is above a threshold (e.g., 50%)
+            if (blueLevel > 50) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Function to capture the average color of the screen
+        function captureAverageColor() {
+            // Get the canvas element
+            var canvas = document.createElement("canvas");
+            var context = canvas.getContext("2d");
+
+            // Set the canvas size to the screen dimensions
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            // Draw the entire screen onto the canvas
+            context.drawImage(document.documentElement, 0, 0);
+
+            // Get the image data of the canvas
+            var imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
+
+            // Calculate the average color
+            var averageColor = [0, 0, 0]; // [R, G, B]
+            var pixelCount = 0;
+
+            for (var i = 0; i < imageData.length; i += 4) {
+                averageColor[0] += imageData[i];     // R
+                averageColor[1] += imageData[i + 1]; // G
+                averageColor[2] += imageData[i + 2]; // B
+                pixelCount++;
+            }
+
+            averageColor[0] = Math.round(averageColor[0] / pixelCount);
+            averageColor[1] = Math.round(averageColor[1] / pixelCount);
+            averageColor[2] = Math.round(averageColor[2] / pixelCount);
+
+            // Convert RGB to a single integer representation
+            var color = (averageColor[0] << 16) | (averageColor[1] << 8) | averageColor[2];
+
+            // Check if the color is too blue
+            if (isTooBlue(color)) {
+                console.log("Color is too blue!");
+            }
+        }
+
+        // Set an interval to capture the average color every second
+        setInterval(captureAverageColor, 1000);
+    </script>
+</body>
+
+</html>
