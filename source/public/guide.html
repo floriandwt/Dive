@@ -22,6 +22,13 @@
             console.log(data);
         });
     </script>
+    <script>
+        // make Figma think the environment is a tablet
+        const meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=768';
+        document.head.appendChild(meta);
+    </script>
 </head>
 
 <body class="bg-white w-screen h-screen">
