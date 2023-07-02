@@ -23,11 +23,9 @@ io.on("connection", (socket) => {
       socket.emit("enterReply", "success");
     } else if (content.msg === "guest" && guest !== null) {
       waitlist.push(socket.id);
-
       socket.emit("enterReply", "waitlist");
     } else if (content.msg === "guide-success") {
-      console.log("guide-success");
-      socket.emit("planningDone", "dive-computer");
+      io.to(guest).emit("planning", "success");
     }
   });
 
