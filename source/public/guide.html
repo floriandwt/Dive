@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface</title>
+    <title>Planning a dive</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="tailwind.css" />
     <script src="/socket.io/socket.io.js"></script>
@@ -22,19 +22,17 @@
             console.log(data);
         });
     </script>
-    <script>
-        // make Figma think the environment is a tablet
-        const meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=768';
-        document.head.appendChild(meta);
-    </script>
 </head>
 
-<body class="bg-white w-screen h-screen">
+<body style="position: relative; background-color: black; width: 100vw; height: 100vh;">
     <iframe width="100%" height="100%"
-        src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FygoyzkHfCuN4dNkxr8RWC1%2FInterface-Design-2%3Fpage-id%3D774%253A5990%26type%3Ddesign%26node-id%3D837-952%26viewport%3D742%252C-433%252C0.51%26t%3D2ym3uerRM1zL2HUy-1%26scaling%3Dcontain%26starting-point-node-id%3D837%253A952%26show-proto-sidebar%3D1%26mode%3Ddesign"
+        src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FygoyzkHfCuN4dNkxr8RWC1%2FInterface-Design-2%3Fpage-id%3D1210%253A1662%26type%3Ddesign%26node-id%3D1281-6351%26viewport%3D2114%252C-3952%252C0.19%26t%3DYWL5ygDoSHB3l0eX-1%26scaling%3Dscale-down%26starting-point-node-id%3D1325%253A4756%26mode%3Ddesign"
         allowfullscreen></iframe>
+    <div id="blocks"
+        style="position: absolute; bottom: 0; width: 100vw; height: 100px; background-color: black; z-index: 100;">
+    </div>
+    <div id="blocks"
+        style="position: absolute; top: 0; width: 100vw; height: 56px; background-color: black; z-index: 100;"></div>
 </body>
 
 </html>

@@ -13,6 +13,7 @@ app.use(express.static(path.join(__dirname, "public")));
 let waitlist = [];
 let guide = null;
 let guest = null;
+let success = false;
 
 io.on("connection", (socket) => {
   socket.on("enter", (content) => {
@@ -21,17 +22,22 @@ io.on("connection", (socket) => {
     } else if (content.msg === "guest" && guest === null) {
       guest = socket.id;
       socket.emit("enterReply", "success");
+      if (success) {
+        io.to(guest).emit("planning", "success");
+      }
     } else if (content.msg === "guest" && guest !== null) {
       waitlist.push(socket.id);
       socket.emit("enterReply", "waitlist");
     } else if (content.msg === "guide-success") {
       io.to(guest).emit("planning", "success");
+      success = true;
     }
   });
 
   socket.on("disconnect", () => {
     if (socket.id === guide) {
       guide = null;
+      success = false;
     } else if (socket.id === guest) {
       guest = null;
       if (waitlist.length > 0) {
