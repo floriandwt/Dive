@@ -38,22 +38,35 @@
 <body class="bg-white m-0">
     <div id="guest" style="display: none;" class="h-screen w-screen bg-green-500 items-center justify-center">
         <div class="flex flex-col gap-4 items-center justify-center">
-            <i data-lucide="check" class="text-white text-xl scale-125"></i>
-            <h1 class="text-xl font-medium text-white">Successfully checked in</h1>
+            <h1 class="text-xl font-medium text-white">You are on the waitlist</h1>
+            <p class="text-white">The diver hasn't yet finished the planning, please wait.</p>
+            <button 
+            onclick="window.open('guide.html', '_blank');"
+            style="background-color: white; color: rgb(34 197 94 / var(--tw-bg-opacity)); font-weight: 600; margin-top: 16px; border: none; padding: 8px 16px; border-radius: 8px;"
+            >
+            Do it yourself
+        </button>
         </div>
     </div>
     </div>
     <div id="waitlist" style="display: none;" class="h-screen w-screen bg-yellow-500 items-center justify-center">
         <div class="flex flex-col gap-4 items-center justify-center">
-            <i data-lucide="x" class="text-white text-xl scale-125"></i>
             <h1 class="text-xl font-medium text-white">You are on the waitlist</h1>
             <p class="text-white">Please wait a moment, until the previous dive is done.</p>
         </div>
     </div>
     <div id="divecomputer" style="display: none;" class="h-screen w-screen">
-        <iframe width="100%" height="100%"
-            src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FygoyzkHfCuN4dNkxr8RWC1%2FInterface-Design-2%3Fpage-id%3D774%253A759%26type%3Ddesign%26node-id%3D774-775%26viewport%3D566%252C712%252C0.05%26t%3DdhPTKVUTNfdsh7xe-1%26scaling%3Dmin-zoom%26starting-point-node-id%3D774%253A775%26mode%3Ddesign"
-            allowfullscreen></iframe>
+        <div style="position: relative; background-color: #191919; width: 100vw; height: 100vh;">
+            <iframe width="100%" height="100%"
+                src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FygoyzkHfCuN4dNkxr8RWC1%2FInterface-Design-2%3Fpage-id%3D774%253A759%26type%3Ddesign%26node-id%3D1134-1904%26viewport%3D2756%252C-5412%252C0.33%26t%3DtKu9hbzY8wqWDbOh-1%26scaling%3Dmin-zoom%26starting-point-node-id%3D774%253A775%26mode%3Ddesign"
+                allowfullscreen></iframe>
+            <div id="blocks"
+                style="position: absolute; bottom: 0; width: 100vw; height: 100px; background-color: #191919; z-index: 100;">
+            </div>
+            <div id="blocks"
+                style="position: absolute; top: 0; width: 100vw; height: 56px; background-color: #191919; z-index: 100;">
+            </div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
