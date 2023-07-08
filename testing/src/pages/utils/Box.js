@@ -26,6 +26,7 @@ export const Box = function Box({ name, image, setBuddy }) {
       className="px-8 py-4 flex-grow rounded-lg bg-transparent text-center border border-zinc-200 float-left overflow-hidden active:cursor-grabbing cursor-grab"
       data-testid={`box`}
     >
+      
       {name}
     </div>
   );
