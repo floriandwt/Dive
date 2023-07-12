@@ -14,6 +14,8 @@ let waitlist = [];
 let guide = null;
 let guest = null;
 let success = false;
+let ambient = null;
+let diverSaved = false;
 
 io.on("connection", (socket) => {
   socket.on("enter", (content) => {
@@ -30,8 +32,26 @@ io.on("connection", (socket) => {
       socket.emit("enterReply", "waitlist");
     } else if (content.msg === "guide-success") {
       io.to(guest).emit("planning", "success");
+      io.to(ambient).emit("enterReply", "success");
       success = true;
+    } else if ( content.msg === "guest-success") {
+      diverSaved = true;
+      io.to(ambient).emit("enterReply", "diver-saved"); 
+    } else if (content.msg === "ambient") {
+      ambient = socket.id;
+      if (success === true) {
+        io.to(ambient).emit("enterReply", "success");
+      }
     }
+
+    socket.on("activity", (content) => {
+      io.to(ambient).emit("activity", content);
+    });
+
+    socket.on("diverSaved", (content) => {
+      diverSaved = true;
+      io.to(ambient).emit("diverSaved", diverSaved);
+    });
   });
 
   socket.on("disconnect", () => {

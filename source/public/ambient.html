@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Ambient</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="tailwind.css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('connect', () => {
+            socket.emit('enter', {
+                msg: 'ambient'
+            });
+        });
+    </script>
+</head>
+
+<body class="bg-white w-screen h-screen">
+    <div id="videoUnderwater" style="width: 100vw; height: 100vh; display: none; background-color: blue;"></div>
+    <div id="videoBase" style="width: 100vw; height: 100vh; background-color: gray;"></div>
+    <div id="videoSaved" style="width: 100vw; height: 100vh; display: none; background-color: green;"></div>
+    <div id="intro" style="width: 100vw; height: 100vh; display: none; background-color: yellow;"></div>
+    <script>
+        let latestTimeReceived = 0;
+        socket.on('enterReply', (data) => {
+            if (data === "success") {
+                document.getElementById("videoUnderwater").style.display = "flex";
+                document.getElementById("videoBase").style.display = "none";
+                document.getElementById("videoSaved").style.display = "none";
+                document.getElementById("intro").style.display = "none";
+            } else if (data === "diver-saved") {
+                document.getElementById("videoSaved").style.display = "flex";
+                document.getElementById("videoBase").style.display = "none";
+                document.getElementById("videoUnderwater").style.display = "none";
+                document.getElementById("intro").style.display = "none";
+            }
+            measureTime();
+        });
+
+        socket.on('activity', (data) => {
+            document.getElementById("videoUnderwater").style.display = "none";
+            document.getElementById("videoBase").style.display = "flex";
+            document.getElementById("videoSaved").style.display = "none";
+            document.getElementById("intro").style.display = "none";
+            measureTime();
+        });
+
+        function measureTime() {
+            latestTimeReceived = Date.now();
+        }
+
+        function checkTime() {
+            if (Date.now() - latestTimeReceived > 120000) {
+                document.getElementById("videoBase").style.display = "none";
+                document.getElementById("videoUnderwater").style.display = "none";
+                document.getElementById("videoSaved").style.display = "none";
+                document.getElementById("intro").style.display = "flex";
+            }
+        }
+
+        setInterval(checkTime, 10000);
+    </script>
+</body>
+
+</html>
