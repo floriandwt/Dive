@@ -19,12 +19,30 @@
 </head>
 
 <body class="bg-white w-screen h-screen">
-    <div id="videoUnderwater" style="width: 100vw; height: 100vh; display: none; background-color: blue;"></div>
-    <div id="videoBase" style="width: 100vw; height: 100vh; background-color: gray;"></div>
-    <div id="videoSaved" style="width: 100vw; height: 100vh; display: none; background-color: green;"></div>
-    <div id="intro" style="width: 100vw; height: 100vh; display: none; background-color: yellow;"></div>
+    <div id="videoUnderwater" style="width: 100vw; height: 100vh; display: none; background-color: blue;">
+        <video autoplay muted loop style="width: 100vw; height: 100vh; object-fit: cover;">
+            <source src="videos/underwater.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div id="videoBase" style="width: 100vw; height: 100vh; background-color: gray;">
+        <video autoplay muted loop style="width: 100vw; height: 100vh; object-fit: cover;">
+            <source src="videos/videobase.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div id="videoSaved" style="width: 100vw; height: 100vh; display: none; background-color: green;">
+        <video autoplay muted loop style="width: 100vw; height: 100vh; object-fit: cover;">
+            <source src="videos/vodeosaved.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div id="intro" style="width: 100vw; height: 100vh; display: none; background-color: yellow;">
+        <video autoplay muted loop style="width: 100vw; height: 100vh; object-fit: cover;">
+            <source src="videos/intro.mp4" type="video/mp4">
+        </video>
+    </div>
     <script>
         let latestTimeReceived = 0;
+        let activityTimeout = null;
+    
         socket.on('enterReply', (data) => {
             if (data === "success") {
                 document.getElementById("videoUnderwater").style.display = "flex";
@@ -37,21 +55,26 @@
                 document.getElementById("videoUnderwater").style.display = "none";
                 document.getElementById("intro").style.display = "none";
             }
-            measureTime();
+            resetActivityTimeout();
         });
-
+    
         socket.on('activity', (data) => {
             document.getElementById("videoUnderwater").style.display = "none";
             document.getElementById("videoBase").style.display = "flex";
             document.getElementById("videoSaved").style.display = "none";
             document.getElementById("intro").style.display = "none";
-            measureTime();
+            resetActivityTimeout();
         });
-
+    
         function measureTime() {
             latestTimeReceived = Date.now();
         }
-
+    
+        document.addEventListener("DOMContentLoaded", function(event) {
+            measureTime();
+            resetActivityTimeout();
+        });
+    
         function checkTime() {
             if (Date.now() - latestTimeReceived > 120000) {
                 document.getElementById("videoBase").style.display = "none";
@@ -60,9 +83,15 @@
                 document.getElementById("intro").style.display = "flex";
             }
         }
-
-        setInterval(checkTime, 10000);
+    
+        function resetActivityTimeout() {
+            clearTimeout(activityTimeout);
+            activityTimeout = setTimeout(checkTime, 120000);
+        }
+    
+        setInterval(measureTime, 10000); // Adjust measurement frequency if necessary
     </script>
+    
 </body>
 
 </html>
