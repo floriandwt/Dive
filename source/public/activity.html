@@ -11,7 +11,7 @@
     <script>
         const socket = io();
         socket.on('connect', () => {
-            socket.emit('activity', {
+            socket.emit('enter', {
                 msg: 'activity'
             });
         });

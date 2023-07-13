@@ -42,11 +42,9 @@ io.on("connection", (socket) => {
       if (success === true) {
         io.to(ambient).emit("enterReply", "success");
       }
-    }
-
-    socket.on("activity", (content) => {
+    } else if (content.msg === "activity") {
       io.to(ambient).emit("activity", content);
-    });
+    }
 
     socket.on("diverSaved", (content) => {
       diverSaved = true;
