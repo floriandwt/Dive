@@ -49,11 +49,15 @@
                 document.getElementById("videoBase").style.display = "none";
                 document.getElementById("videoSaved").style.display = "none";
                 document.getElementById("intro").style.display = "none";
+
+                document.getElementById("videoUnderwater").getElementsByTagName("video")[0].play();
             } else if (data === "diver-saved") {
                 document.getElementById("videoSaved").style.display = "flex";
                 document.getElementById("videoBase").style.display = "none";
                 document.getElementById("videoUnderwater").style.display = "none";
                 document.getElementById("intro").style.display = "none";
+
+                document.getElementById("videoSaved").getElementsByTagName("video")[0].play();
             }
             resetActivityTimeout();
         });
@@ -64,6 +68,8 @@
             document.getElementById("videoSaved").style.display = "none";
             document.getElementById("intro").style.display = "none";
             resetActivityTimeout();
+
+            document.getElementById("videoBase").getElementsByTagName("video")[0].play();
         });
     
         function measureTime() {
@@ -81,6 +87,8 @@
                 document.getElementById("videoUnderwater").style.display = "none";
                 document.getElementById("videoSaved").style.display = "none";
                 document.getElementById("intro").style.display = "flex";
+
+                document.getElementById("intro").getElementsByTagName("video")[0].play();
             }
         }
     
